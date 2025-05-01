@@ -35,10 +35,10 @@ class Patient extends Model
         return $this->hasMany(Consultation::class, 'patient_id');
     }
 
-    public function localisation()
-    {
-        return $this->belongsTo(Localisation::class, 'localisation_id');
-    }
+    // public function localisation()
+    // {
+    //     return $this->belongsTo(Localisation::class, 'localisation_id');
+    // }
 
     public function examensLaboratoire()
     {
@@ -59,4 +59,10 @@ class Patient extends Model
     {
         return $this->hasMany(Vaccination::class, 'patient_id');
     }
+
+    public function localisation()
+    {
+        return $this->belongsTo(\App\Models\Localisation::class, 'localisation_id');
+    }
+
 }

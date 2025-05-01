@@ -7,6 +7,11 @@ use App\Models\CarteUrgence;
 use App\Http\Requests\API\Dossier\CarteUrgenceRequest;
 use Illuminate\Http\Request;
 
+use App\Models\Patient;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 class CarteUrgenceController extends Controller
 {
     public function show($patientId)

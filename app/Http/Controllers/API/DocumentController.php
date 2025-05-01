@@ -7,6 +7,12 @@ use App\Models\DocumentMedical;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\Patient;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+
 class DocumentController extends Controller
 {
     /**

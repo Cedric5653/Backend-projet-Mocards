@@ -7,6 +7,12 @@ use App\Models\Vaccination;
 use App\Http\Requests\API\Medical\VaccinationRequest;
 use Illuminate\Http\Request;
 
+use App\Models\Patient;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+
 class VaccinationController extends Controller
 {
     public function index(Request $request)

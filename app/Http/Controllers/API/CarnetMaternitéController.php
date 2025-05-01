@@ -8,6 +8,11 @@ use App\Http\Requests\API\Dossier\CarnetMaternitéRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Patient;
+use App\Models\User; 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 class CarnetMaternitéController extends Controller
 {
     /**

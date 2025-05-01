@@ -8,6 +8,11 @@ use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+
 class PatientController extends Controller
 {
     /**
@@ -16,6 +21,7 @@ class PatientController extends Controller
     public function index(Request $request)
     {
         $query = Patient::query();
+        $query = Patient::with('localisation');
 
         // Search functionality
         if ($request->has('search')) {
@@ -164,6 +170,42 @@ class PatientController extends Controller
             'data' => $patients
         ]);
     }
+
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+            $patient = Patient::findOrFail($id);
+
+            // Vérifier si le patient possède des consultations
+            if ($patient->consultations()->exists()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Impossible de supprimer ce patient car il possède des consultations associées.'
+                ], 422);
+            }
+            
+            // Vous pouvez vérifier d'autres relations, par exemple :
+            // if ($patient->examens()->exists()) { ... }
+
+            // Si aucune contrainte n'empêche la suppression, on supprime le patient
+            $patient->delete();
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Patient supprimé avec succès'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erreur lors de la suppression du patient',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function exporterPatients(Request $request)
     {

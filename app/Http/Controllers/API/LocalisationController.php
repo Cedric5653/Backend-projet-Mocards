@@ -9,43 +9,61 @@ use App\Http\Requests\LocalisationRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
+
+
+use App\Models\Patient;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+
 class LocalisationController extends Controller
 {
    /**
     * Liste des localisations avec filtres et cache
     */
-   public function index(Request $request)
-   {
-       $cacheKey = 'localisations_' . md5($request->fullUrl());
+//    public function index(Request $request)
+//    {
+//        $cacheKey = 'localisations_' . md5($request->fullUrl());
 
-       return Cache::remember($cacheKey, 3600, function () use ($request) {
-           $query = Localisation::query();
+//        return Cache::remember($cacheKey, 3600, function () use ($request) {
+//            $query = Localisation::query();
 
-           // Filtres
-           if ($request->has('region')) {
-               $query->where('region', 'like', '%' . $request->region . '%');
-           }
-           if ($request->has('province')) {
-               $query->where('province', 'like', '%' . $request->province . '%');
-           }
-           if ($request->has('ville')) {
-               $query->where('ville', 'like', '%' . $request->ville . '%');
-           }
-           if ($request->has('district_sanitaire')) {
-               $query->where('district_sanitaire', 'like', '%' . $request->district_sanitaire . '%');
-           }
+//            // Filtres
+//            if ($request->has('region')) {
+//                $query->where('region', 'like', '%' . $request->region . '%');
+//            }
+//            if ($request->has('province')) {
+//                $query->where('province', 'like', '%' . $request->province . '%');
+//            }
+//            if ($request->has('ville')) {
+//                $query->where('ville', 'like', '%' . $request->ville . '%');
+//            }
+//            if ($request->has('district_sanitaire')) {
+//                $query->where('district_sanitaire', 'like', '%' . $request->district_sanitaire . '%');
+//            }
 
-           // Relations et comptage
-           $query->withCount(['patients']);
+//            // Relations et comptage
+//            $query->withCount(['patients']);
 
-           $localisations = $query->paginate($request->input('per_page', 15));
+//            $localisations = $query->paginate($request->input('per_page', 15));
 
-           return response()->json([
-               'status' => 'success',
-               'data' => $localisations
-           ]);
-       });
-   }
+//            return response()->json([
+//                'status' => 'success',
+//                'data' => $localisations
+//            ]);
+//        });
+//    }
+
+        public function index(Request $request)
+        {
+            $localisations = \App\Models\Localisation::all();
+            return response()->json([
+                'status' => 'success',
+                'data'   => $localisations
+            ]);
+        }
+
 
    /**
     * Créer une nouvelle localisation

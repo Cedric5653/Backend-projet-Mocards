@@ -1,11 +1,12 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -20,8 +21,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'nom' => 'required|string|unique:users',
-            'prenom' => 'required|string|unique:users',
+            'nom' => 'required|string',
+            'prenom' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,role_id'
@@ -75,7 +76,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Connexion réussie',
-                'user' => $user,
+                'data' => $user,
                 'token' => $token,
                 'token_type' => 'Bearer'
             ]);
@@ -134,16 +135,27 @@ class AuthController extends Controller
     /**
      * Get the profile of the authenticated user
      */
+
     public function getUserProfile(Request $request)
     {
         try {
-            $user = $request->user();
-            dd($user);
-
+            $user = $request->user()->load('role'); // Charge la relation role
+            
             return response()->json([
                 'status' => 'success',
-                'message' => 'User profile retrieved successfully',
-                'data' => $user
+                'data' => $user 
+                // 'data' => [
+                //     'user' => [
+                //         'user_id' => $user->user_id,
+                //         'nom' => $user->nom,
+                //         'prenom' => $user->prenom,
+                //         'email' => $user->email,
+                //         'role' => [
+                //             'role_id' => $user->role->role_id,
+                //             'role_name' => $user->role->role_name
+                //         ]
+                //     ]
+                // ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -163,9 +175,9 @@ class AuthController extends Controller
 
             // Validation des données
             $request->validate([
-                'nom' => 'sometimes|string|unique:users,nom,' . $user->id,
-                'prenom' => 'sometimes|string|unique:users,prenom,' . $user->id,
-                'email' => 'sometimes|string|email|unique:users,email,' . $user->id,
+                'nom' => 'sometimes|string',
+                'prenom' => 'sometimes|string',
+                'email' => 'sometimes|string|email|unique:users,email,' . $user->user_id . ',user_id',
                 'password' => 'nullable|string|min:8|confirmed', // Optionnel
             ]);
 

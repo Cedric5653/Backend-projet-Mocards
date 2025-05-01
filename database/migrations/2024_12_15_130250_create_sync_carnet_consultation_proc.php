@@ -10,6 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        DB::unprepared("DROP PROCEDURE IF EXISTS `sync_carnet_consultation`");
         DB::unprepared("CREATE DEFINER=`root`@`localhost` PROCEDURE `sync_carnet_consultation`(IN p_consultation_id INT)
 BEGIN
     INSERT INTO carnet_numerique (

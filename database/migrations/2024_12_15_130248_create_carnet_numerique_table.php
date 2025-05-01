@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        DB::statement('DROP VIEW IF EXISTS `carnet_numerique`;');
         Schema::create('carnet_numerique', function (Blueprint $table) {
             $table->integer('carnet_id', true);
             $table->integer('patient_id')->index('patient_id');

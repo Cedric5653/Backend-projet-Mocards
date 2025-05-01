@@ -16,11 +16,11 @@ class StatistiquesController extends Controller
     /**
      * Statistiques globales du système
      */
+
     public function index()
     {
-        // Utilisation du cache pour optimiser les performances
-        return Cache::remember('statistiques_globales', 3600, function () {
-            $stats = [
+        $stats = \Cache::remember('statistiques_globales', 3600, function () {
+            return [
                 'patients' => [
                     'total' => Patient::count(),
                     'nouveaux_mois' => Patient::whereMonth('created_at', Carbon::now()->month)->count(),
@@ -38,13 +38,14 @@ class StatistiquesController extends Controller
                     'aujourdhui' => $this->getUrgencesAujourdhui()
                 ]
             ];
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $stats
-            ]);
         });
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $stats
+        ]);
     }
+
 
     /**
      * Statistiques par région
@@ -299,9 +300,9 @@ public function alertesSanitaires()
     return response()->json([
         'status' => 'success',
         'data' => [
-            'maladies_en_hausse' => $this->getMaladiesEnHausse(),
-            'zones_risque' => $this->getZonesRisque(),
-            'recommandations' => $this->getRecommandations()
+            'maladies_en_hausse' => $this->getMaladiesFrequentes(),
+            'zones_risque' => $this->getMaladiesFrequentes(),
+            'recommandations' => $this->getPathologiesFrequentes()
         ]
     ]);
 }

@@ -40,15 +40,15 @@ Route::prefix('v1')->middleware(['api.key'])->group(function () {
     
     Route::post('auth/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('auth/reset-password', [AuthController::class, 'resetPassword']);
-    Route::get('auth/user-profile', [AuthController::class, 'getUserProfile']);
-    Route::put('auth/update-user-profile', [AuthController::class, 'updateUserProfile']);
-
+    
     // Routes protégées par authentication
     Route::middleware(['auth:sanctum'])->group(function () {
         // Auth
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('auth/user', [AuthController::class, 'user']);
         
+        Route::get('auth/user-profile', [AuthController::class, 'getUserProfile']);
+        Route::put('auth/update-user-profile', [AuthController::class, 'updateUserProfile']);
 
         // Routes pour les patients (protégées par rôle)
         Route::middleware(['role:Admin,Médecin'])->group(function () {
@@ -93,6 +93,16 @@ Route::prefix('v1')->middleware(['api.key'])->group(function () {
         Route::middleware(['role:Admin,Médecin'])->group(function () {
             Route::apiResource('rendez-vous', RendezVousController::class);
         });
+
+        //Consultations
+        Route::apiResource('consultations', ConsultationController::class);
+
+         // Routes du dashboard
+        Route::get('dashboard/stats', [\App\Http\Controllers\DashboardController::class, 'stats']);
+        Route::get('dashboard/activities', [\App\Http\Controllers\DashboardController::class, 'activities']);
+        Route::get('dashboard/appointments', [\App\Http\Controllers\DashboardController::class, 'appointments']);
+        Route::get('dashboard/alerts', [\App\Http\Controllers\DashboardController::class, 'alerts']);
+
 
         // Localisation
         Route::middleware(['role:Admin'])->group(function () {

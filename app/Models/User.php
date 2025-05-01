@@ -43,22 +43,26 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        // return $this->role === 'admin';
+        return strtolower($this->role->role_name) === 'admin';
     }
 
     public function isMedecin()
     {
-        return $this->role === 'medecin';
+        // return $this->role === 'medecin';
+        return strtolower($this->role->role_name) === 'medecin';
     }
 
     public function isInfirmier()
     {
-        return $this->role === 'infirmier';
+        // return $this->role === 'infirmier';
+        return strtolower($this->role->role_name) === 'infirmier';
     }
 
     public function isSecouriste()
     {
-        return $this->role === 'secouriste';
+        // return $this->role === 'secouriste';
+        return strtolower($this->role->role_name) === 'secouriste';
     }
 
 
